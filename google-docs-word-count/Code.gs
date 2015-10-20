@@ -1,4 +1,4 @@
-var nanowrimoLog = ""; // For debug logging across methods.
+var g_nanowrimoLog = ""; // For debug logging across methods.
 
 function onInstall(e) {
   setIgnoredHeading("");
@@ -32,7 +32,7 @@ function doPost(e) {
   var snippet = e.parameter["snippet"];
   if (!snippet) {
     log("No snippet found to add. Total is still " + oldWordCount + " words");
-    return ContentService.createTextOutput(nanowrimoLog);
+    return ContentService.createTextOutput(g_nanowrimoLog);
   }
     
   var snippetWordCount = getWordCount(snippet);
@@ -54,9 +54,9 @@ function doPost(e) {
   updateReportCard(newWordCount);
   
   log("Total word count is now " + newWordCount + " words.");
-  email(nanowrimoLog);
+  email(g_nanowrimoLog);
   
-  return ContentService.createTextOutput(nanowrimoLog);
+  return ContentService.createTextOutput(g_nanowrimoLog);
 }
 
 /*******************************************************************************/
@@ -192,10 +192,9 @@ function getSpreadsheet() {
   return SpreadsheetApp.openById(reportCardId);
 }
 
-/* Uses global variable "nanowrimoLog". */
 function log(msg) {
   Logger.log(msg);
-  nanowrimoLog += msg + "\n";
+  g_nanowrimoLog += msg + "\n";
 }
 
 function email(msg) {
