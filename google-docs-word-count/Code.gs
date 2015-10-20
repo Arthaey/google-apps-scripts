@@ -149,7 +149,7 @@ function updateReportCard(newWordCount) {
     "desired": Math.round(desiredCountCell.getValue())
   };
   
-  log(wordCounts["min"] + ": minumum word count to win\n" +
+  log(wordCounts["min"] + ": minimum word count to win\n" +
       wordCounts["desired"] + ": desired word count\n");
 
   return wordCounts;
