@@ -103,11 +103,22 @@ function insertText(text, insertPoint) {
 
 function updateReportCard(newWordCount) {
   log("\n\nUPDATING REPORT CARD SPREADSHEET...\n\n");
+
+  var story = getDocument();
+  if (!story) {
+    log("ABANDONING BECAUSE STORY DOCUMENT NOT FOUND: " + getStoryId());
+    return {};
+  }
+
+  var spreadsheet = getSpreadsheet();
+  if (!spreadsheet) {
+    log("ABANDONING BECAUSE REPORT CARD SPREADSHEET NOT FOUND: " + getReportCardId());
+    return {};
+  }
+
   if (!newWordCount) newWordCount = getAdjustedWordCount();
   
-  var spreadsheet = getSpreadsheet();
   var sheet = spreadsheet.getSheetByName("Report Card");
-  
   var startDate = sheet.getRange("A9").getValue();
   var now = new Date();
   log("Start date: " + startDate);
