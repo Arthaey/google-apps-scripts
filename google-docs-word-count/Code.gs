@@ -1,5 +1,11 @@
 var g_nanowrimoLog = ""; // For debug logging across methods.
 
+// Triggers can't return anything, so if you want to compare things between
+// runs, it's ugly globar vars! :(
+var g_updateTrigger;
+var g_thisWordCount = 0;
+var g_lastWordCount = 0;
+
 function onInstall(e) {
   setIgnoredHeading("");
   setManualAdjustment(0);
@@ -21,6 +27,44 @@ function onOpen(e) {
     .addItem("Set report card spreadsheet", "promptForReportCardId")
     .addItem("Set log email address", "promptForEmailAddress")
     .addToUi();
+
+  installUpdateTrigger();
+}
+
+function installUpdateTrigger() {
+  var handlerFunctionName = "runUpdateTrigger";
+
+  var alreadyInstalled = false;
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() == handlerFunctionName) {
+      alreadyInstalled = true;
+      g_updateTrigger = triggers[i];
+      break;
+    }
+  }
+
+  if (!alreadyInstalled) {
+    g_updateTrigger = ScriptApp.newTrigger(handlerFunctionName)
+        .timeBased()
+        .everyMinutes(15)
+        .create();
+  }
+}
+
+// Because there is no "onClose" event, delete this trigger
+// if there has been no change in word count between runs.
+function runUpdateTrigger() {
+  g_lastWordCount = g_thisWordCount;
+  var wordCounts = updateReportCard();
+  g_thisWordCount = wordCounts["new"];
+
+  log("LAST WORD COUNT: " + g_lastWordCount);
+  log("THIS WORD COUNT: " + g_thisWordCount);
+  if (g_thisWordCount == g_lastWordCount) {
+    log("Deleting update trigger because no change in word count between runs.");
+    ScriptApp.deleteTrigger(g_updateTrigger);
+  }
 }
 
 function doPost(e) {
