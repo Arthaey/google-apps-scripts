@@ -214,9 +214,11 @@ function updateReportCard(newWordCount) {
 
 function getInsertPoint() {
   var body = getDocument().getBody();
-  var searchResult = body.findText("INSERT POINT");
-  if (!searchResult) return null;
+  var insertPointText = getInsertPointText();
+  if (!insertPointText) insertPointText = "CONTINUE HERE";
 
+  var searchResult = body.findText(insertPointText);
+  if (!searchResult) return null;
   var elem = searchResult.getElement();
   return findParentParagraph(elem);
 }

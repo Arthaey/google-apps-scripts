@@ -15,6 +15,9 @@ function setManualAdjustment(val) { return _setProperty("MANUAL_ADJUSTMENT", val
 function getIgnoredHeading()      { return _getProperty("IGNORED_HEADING"); }
 function setIgnoredHeading(val)   { return _setProperty("IGNORED_HEADING", val); }
 
+function getInsertPointText()     { return _getProperty("INSERT_POINT_TEXT"); }
+function setInsertPointText(val)  { return _setProperty("INSERT_POINT_TEXT", val); }
+
 function getStoryId()             { return _getProperty("STORY_ID"); }
 function setStoryId(val)          { return _setProperty("STORY_ID", val); }
 
