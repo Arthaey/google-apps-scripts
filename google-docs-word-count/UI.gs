@@ -36,16 +36,8 @@ function displayAdjustedWordCount() {
   var msg = 
     wordCounts["raw"] + ": raw word count\n" +
     "- " + wordCounts["title"] + ": title word count\n" +
-    "- " + (toc * 2) + ": table of contents word count (" + toc + "x2)\n"
-    ;
-  
-  if (ignoredHeading) {
-    msg += "- " + wordCounts["ignored"] + ": ignore from \"" + ignoredHeading + "\" on\n";
-  } else {
-    msg += "- " + wordCounts["ignored"] + ": ignored words\n";
-  }
-    
-  msg +=
+    "- " + (toc * 2) + ": table of contents word count (" + toc + "x2)\n" +
+    "- " + wordCounts["ignored"] + ": ignored words\n" +
     "- " + wordCounts["manual"] + ": manual adjustment\n" +
     "====================\n" +
     wordCounts["adjusted"] + ": adjusted word count"
