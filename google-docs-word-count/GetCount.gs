@@ -10,9 +10,15 @@ function getWordCounts() {
   wordCounts["raw"] = getWordCount(body.getText());
   wordCounts["title"] = getTitleWordCount(body);
   wordCounts["toc"] = getTableOfContentsWordCount(body);
-  wordCounts["insert"] = getWordCount(insertPoint ? insertPoint.getText() : 0);
+  wordCounts["insert"] = 0;
   wordCounts["ignored"] = getIgnoredWordCount(body);
   wordCounts["manual"] = Math.ceil(getManualAdjustment());
+
+  if (insertPoint) {
+    wordCounts["insert"] += getWordCount(insertPoint.getText());
+    // Don't double-count bracketed text.
+    wordCounts["insert"] -= getBracketedWordCount(insertPoint.getText());
+  }
   
   // Remove DOUBLE the number of words in the table of contents,
   // because the headers must show up somewhere in the text itself too.  
@@ -47,31 +53,46 @@ function getTableOfContentsWordCount(body) {
 }
 
 function getIgnoredWordCount(body) {
+  var wordCount = 0;
   var ignoredHeading = getIgnoredHeading();
-  if (!ignoredHeading) return 0;
+  var text = body.getText();
+  if (!text) return 0;
+
+  wordCount += getBracketedWordCount(text);
+
+  // If no "IGNORE PAST HERE" type heading defined, then we're done.
+  if (!ignoredHeading) return wordCount;
   
-  var body = getDocument().getBody();
+  var firstElement = null;
   var heading = null;
   var searchResult = null;
   
   // findText didn't seem to work with non-ASCII?
   while (searchResult = body.findElement(DocumentApp.ElementType.PARAGRAPH, searchResult)) {
     var par = searchResult.getElement().asParagraph();
+    if (!firstElement) {
+      firstElement = par;
+    }
     if (ignoredHeading === par.getText()) {
       heading = par;
     }
   }
-  if (!heading) return 0;
+  // If no "IGNORE PAST HERE" type heading found, then we're done.
+  if (!heading) return wordCount;
   
-  var wordCount = getWordCount(heading.getText());
+  wordCount += getWordCount(heading.getText());
+  wordCount -= getBracketedWordCount(heading.getText());
   var elem = heading;
   
   do {
     // Don't count headings, which are already included in the TOC word count.
     elem = elem.getNextSibling();
+    var elemText = elem.getText();
     if (elem.getHeading() == DocumentApp.ParagraphHeading.NORMAL) {
-      wordCount += getWordCount(elem.getText());
+      wordCount += getWordCount(elemText);
     }
+    // Don't double-count bracketed text.
+    wordCount -= getBracketedWordCount(elemText);
   } while (!elem.isAtDocumentEnd());
   
   return wordCount;
@@ -80,5 +101,17 @@ function getIgnoredWordCount(body) {
 function getWordCount(text) {
   if (!text) return 0;
   return text.trim().split(/\s+/).length;
+}
+
+function getBracketedWordCount(text) {
+  var wordCount = 0;
+  var bracketRegex = /\[([^\[\]]+?)\]/g;
+  var matches = text.match(bracketRegex);
+  if (!matches) return 0;
+
+  for (var i = 0; i < matches.length; i++) {
+    wordCount += getWordCount(matches[i]);
+  }
+  return wordCount;
 }
 
