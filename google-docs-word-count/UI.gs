@@ -1,3 +1,8 @@
+function alertMetGoalForToday(goal, actual) {
+  var ui = DocumentApp.getUi();
+  ui.alert("Congrats! Word count is " + actual + " (today's goal was " + goal + ").");
+}
+
 function _promptForProperty(msg, setFunc) {
   var ui = DocumentApp.getUi();
   var response = ui.prompt(msg);
