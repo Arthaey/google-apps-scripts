@@ -63,7 +63,7 @@ function getTodaysDateRow(sheet, now) {
   var todaysDateRow = 9;
   for (var i = 0; i < dates.length; i++) {
     if (dates[i][0] <= now) {
-      todaysDateRow = 9 + i - 1;
+      todaysDateRow = 9 + i;
     }
   }
 
