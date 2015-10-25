@@ -22,6 +22,8 @@ function updateWordCountDisplay(wordCount) {
 
 function alertMetGoalForToday(goal, actual) {
   var ui = DocumentApp.getUi();
+  goal = formatWithCommas(goal);
+  actual = formatWithCommas(actual);
   ui.alert("Congrats! Word count is " + actual + " (today's goal was " + goal + ").");
 }
 
@@ -61,13 +63,14 @@ function displayAdjustedWordCount() {
   var ignoredHeading = getIgnoredHeading();
 
   var msg = 
-    wordCounts["raw"] + ": raw word count\n" +
-    "- " + wordCounts["title"] + ": title word count\n" +
-    "- " + (toc * 2) + ": table of contents word count (" + toc + "x2)\n" +
-    "- " + wordCounts["ignored"] + ": ignored words\n" +
-    "- " + wordCounts["manual"] + ": manual adjustment\n" +
+    formatWithCommas(wordCounts["raw"]) + ": raw word count\n" +
+    "- " + formatWithCommas(wordCounts["title"]) + ": title word count\n" +
+    "- " + formatWithCommas(toc * 2) + ": table of contents word count " +
+    "(" + formatWithCommas(toc) + "x2)\n" +
+    "- " + formatWithCommas(wordCounts["ignored"]) + ": ignored words\n" +
+    "- " + formatWithCommas(wordCounts["manual"]) + ": manual adjustment\n" +
     "====================\n" +
-    wordCounts["adjusted"] + ": adjusted word count"
+    formatWithCommas(wordCounts["adjusted"]) + ": adjusted word count"
     ;
 
   updateWordCountDisplay();
@@ -82,11 +85,16 @@ function displayUpdatedReportCard() {
     msg = wordCounts["msg"];
   } else {
     msg =
-        wordCounts["new"] + ": new word count\n" +
-      "====================\n" +
-        wordCounts["min"] + ": minumum word count to win\n" +
-        wordCounts["desired"] + ": desired word count\n"
-        ;
+        formatWithCommas(wordCounts["new"]) + ": new word count\n" +
+        formatWithCommas(wordCounts["min"]) + ": minumum word count to win on time\n";
+
+    if (wordCounts["min"] != wordCounts["desired"]) {
+      msg += formatWithCommas(wordCounts["desired"]) + ": desired word count\n";
+    }
+
+    var diff = wordCounts["min"] - wordCounts["new"];
+    msg += "====================\n" +
+        formatWithCommas(diff) + ": write at least this much more today!\n";
   }
 
   updateWordCountDisplay();
