@@ -1,3 +1,25 @@
+function formatWithCommas(num) {
+  num = num.toString();
+  while (/(\d+)(\d{3})/.test(num)){
+    num = num.replace(/(\d+)(\d{3})/, "$1" + "," + "$2");
+  }
+  return num;
+}
+
+function updateWordCountDisplay(wordCount) {
+  var body = getDocument().getBody();
+  var range = body.findText("\\[[0-9,]+ WORDS, LAST UPDATED .+?\\]");
+  var text = range.getElement().asText();
+  log(text.getText());
+
+  var now = Utilities.formatDate(new Date(), "GMT-5", "E yyyy-MM-dd h:mm a");
+  if (!wordCount) wordCount = getAdjustedWordCount();
+  wordCount = formatWithCommas(wordCount);
+
+  text.setText("[" + wordCount + " WORDS, LAST UPDATED " + now + "]");
+  text.setForegroundColor("#b7b7b7"); // dark gray 1
+}
+
 function alertMetGoalForToday(goal, actual) {
   var ui = DocumentApp.getUi();
   ui.alert("Congrats! Word count is " + actual + " (today's goal was " + goal + ").");
@@ -37,7 +59,7 @@ function displayAdjustedWordCount() {
   var wordCounts = getWordCounts();
   var toc = wordCounts["toc"];
   var ignoredHeading = getIgnoredHeading();
-  
+
   var msg = 
     wordCounts["raw"] + ": raw word count\n" +
     "- " + wordCounts["title"] + ": title word count\n" +
@@ -47,7 +69,8 @@ function displayAdjustedWordCount() {
     "====================\n" +
     wordCounts["adjusted"] + ": adjusted word count"
     ;
-      
+
+  updateWordCountDisplay();
   DocumentApp.getUi().alert(msg);
 }
 
@@ -65,7 +88,8 @@ function displayUpdatedReportCard() {
         wordCounts["desired"] + ": desired word count\n"
         ;
   }
-    
+
+  updateWordCountDisplay();
   DocumentApp.getUi().alert(msg);
 }
 
