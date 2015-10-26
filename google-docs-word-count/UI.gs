@@ -12,11 +12,14 @@ function updateWordCountDisplay(wordCount) {
   var text = range.getElement().asText();
   log(text.getText());
 
-  var now = Utilities.formatDate(new Date(), "GMT-5", "E yyyy-MM-dd h:mm a");
+  var now = new Date();
+  var timezone = -(now.getTimezoneOffset() / 60);
+  var timezoneStr = "GMT" + (timezone < 0 ? "" : "+") + timezone;
+  var nowStr = Utilities.formatDate(now, timezoneStr, "E yyyy-MM-dd h:mm a");
   if (!wordCount) wordCount = getAdjustedWordCount();
   wordCount = formatWithCommas(wordCount);
 
-  text.setText("[" + wordCount + " WORDS, LAST UPDATED " + now + "]");
+  text.setText("[" + wordCount + " WORDS, LAST UPDATED " + nowStr + "]");
   text.setForegroundColor("#b7b7b7"); // dark gray 1
 }
 
