@@ -46,7 +46,6 @@ function doPost(e) {
   }
     
   var snippetWordCount = getWordCount(snippet);
-  var newWordCount = oldWordCount + snippetWordCount;
   
   var body = getDocument().getBody();  
   var insertPoint = getInsertPoint();
@@ -61,11 +60,18 @@ function doPost(e) {
     insertText(snippet, insertPoint);
   }
   
-  updateReportCard(newWordCount);
+  var reportCardWordCounts = updateReportCard(newWordCount);
+  var newWordCount = reportCardWordCounts["new"];
+  var minWordCount = reportCardWordCounts["min"];
   
   log("Total word count is now " + newWordCount + " words.");
+
+  if (newWordCount < minWordCount) {
+    var neededWordCount = minWordCount - newWordCount;
+    log("Write " + neededWordCount + " more words today.");
+  }
+
   email(g_nanowrimoLog);
-  
   return ContentService.createTextOutput(g_nanowrimoLog);
 }
 
