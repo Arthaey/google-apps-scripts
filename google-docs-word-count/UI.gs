@@ -21,20 +21,22 @@ function updateWordCountDisplay(wordCount) {
 }
 
 function alertMetGoalForToday(goal, actual) {
-  var ui = DocumentApp.getUi();
   goal = formatWithCommas(goal);
   actual = formatWithCommas(actual);
-  ui.alert("Congrats! Word count is " + actual + " (today's goal was " + goal + ").");
+  withUi(function(ui) {
+    ui.alert("Congrats! Word count is " + actual + " (today's goal was " + goal + ").");
+  });
 }
 
 function _promptForProperty(msg, setFunc) {
-  var ui = DocumentApp.getUi();
-  var response = ui.prompt(msg);
-  if (response.getSelectedButton() == ui.Button.OK) {
-    var value = response.getResponseText();
-    setFunc(value);
-    return value;
-  }
+  withUi(function(ui) {
+    var response = ui.prompt(msg);
+    if (response.getSelectedButton() == ui.Button.OK) {
+      var value = response.getResponseText();
+      setFunc(value);
+      return value;
+    }
+  });
 }
 
 function promptForIgnoredHeading() {
@@ -108,4 +110,14 @@ function displayUpdatedCampNaNoWriMo(wordCount) {
   DocumentApp.getUi().alert(msg);
 }
 */
+
+function withUi(func) {
+  if (!DocumentApp) return;
+  var doc = getDocument();
+  if (!doc) return;
+  var ui = DocumentApp.getUi();
+  if (!ui) return;
+
+  func(ui);
+}
 
