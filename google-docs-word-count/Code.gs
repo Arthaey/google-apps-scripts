@@ -57,7 +57,7 @@ function doPost(e) {
   if (e.parameters["is_html"] == 1) {
     insertHtml(snippet, insertPoint);
   } else {
-    insertText(snippet, insertPoint);
+    insertHtml("<p>" + text.trim() + "</p>");
   }
   
   var reportCardWordCounts = updateReportCard(newWordCount);
@@ -114,12 +114,6 @@ function insertHtml(html, insertPoint) {
     para.setAttributes(styles);
     insertPointIndex++; // keep inserting AFTER the latest paragraph
   }
-}
-
-function insertText(text, insertPoint) {
-  var body = getDocument().getBody();
-  var insertPointIndex = getInsertPointIndex(insertPoint);
-  body.insertParagraph(insertPointIndex, text.trim() + "\n");
 }
 
 /*******************************************************************************/
