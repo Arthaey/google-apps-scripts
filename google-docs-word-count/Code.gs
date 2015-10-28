@@ -85,12 +85,16 @@ function insertHtml(html, insertPoint) {
   var body = getDocument().getBody();
   var insertPointIndex = getInsertPointIndex(insertPoint);
   var indent = insertPoint.getPreviousSibling().getIndentFirstLine();
-  
+
+  var styles = {};
+  styles[DocumentApp.Attribute.BACKGROUND_COLOR] = "#EAD1DC"; // identify added text easily
+  styles[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.JUSTIFY;
+  styles[DocumentApp.Attribute.INDENT_FIRST_LINE] = indent;
+
   for (var i = 0; i < paragraphs.length; i++) {
     var para = body.insertParagraph(insertPointIndex, "");
     var elems = paragraphs[i].getAllContent();
-    para.setIndentFirstLine(indent);
-    
+
     for (var j = 0; j < elems.length; j++) {
       var elem = elems[j];
       var text = para.appendText(elem.getValue());
@@ -107,6 +111,7 @@ function insertHtml(html, insertPoint) {
       text.setItalic(isItalic);
     }
     
+    para.setAttributes(styles);
     insertPointIndex++; // keep inserting AFTER the latest paragraph
   }
 }
