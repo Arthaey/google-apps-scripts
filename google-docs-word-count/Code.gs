@@ -84,7 +84,7 @@ function insertHtml(html, insertPoint) {
   var paragraphs = root.getChildren();
   var body = getDocument().getBody();
   var insertPointIndex = getInsertPointIndex(insertPoint);
-  var indent = insertPoint.getPreviousSibling().getIndentFirstLine();
+  var indent = getIndentSize();
 
   var styles = {};
   styles[DocumentApp.Attribute.BACKGROUND_COLOR] = "#EAD1DC"; // identify added text easily
@@ -133,6 +133,21 @@ function getInsertPointIndex(insertPoint) {
   if (!insertPoint) insertPoint = getInsertPoint();
   var body = getDocument().getBody();
   return (insertPoint ? body.getChildIndex(insertPoint) : body.getNumChildren() - 1);
+}
+
+function getIndentSize() {
+  var body = getDocument().getBody();
+  var result = null;
+
+  while (result = body.findElement(DocumentApp.ElementType.PARAGRAPH, result)) {
+   var para = result.getElement().asParagraph();
+   if (para.getIndentFirstLine() > 0) {
+     log(para.getIndentFirstLine());
+     return para.getIndentFirstLine();
+   }
+ }
+  
+  return 0;
 }
 
 function findParentParagraph(elem) {
