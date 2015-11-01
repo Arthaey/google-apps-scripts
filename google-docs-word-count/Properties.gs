@@ -31,5 +31,9 @@ function setReportCardId(id)      { return _set("REPORT_CARD_ID", val); }
 function getEmailAddress(d)       { return _get("EMAIL_ADDRESS", d || getActiveUserEmail()); }
 function setEmailAddress(val)     { return _set("EMAIL_ADDRESS", val); }
 
+function getNanowrimoUsername(d)  { return _get("NANOWRIMO_USERNAME", d || getActiveUserName()); }
+function setNanowrimoUsername(v)  { return _set("NANOWRIMO_USERNAME", v); }
 
+function getNanowrimoSecretKey(d) { return _get("NANOWRIMO_SECRET_KEY", d); }
+function setNanowrimoSecretKey(v) { return _set("NANOWRIMO_SECRET_KEY", v); }
 

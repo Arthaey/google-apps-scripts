@@ -1,11 +1,7 @@
 var g_nanowrimoLog = ""; // For debug logging across methods.
 
-// Triggers can't return anything, so if you want to compare things between
-// runs, it's ugly globar vars! :(
 var g_checkGoalTrigger;
 var g_updateTrigger;
-var g_thisWordCount = 0;
-var g_lastWordCount = 0;
 
 function onInstall(e) {
   setIgnoredHeading("");
@@ -19,7 +15,6 @@ function onOpen(e) {
   DocumentApp.getUi().createAddonMenu()
     .addItem("Show adjusted word count", "displayAdjustedWordCount")
     .addItem("Update Record Card spreadsheet", "displayUpdatedReportCard")
-    //.addItem("Update Camp NaNoWriMo word count", "displayUpdatedCampNaNoWriMo")
     .addSeparator()
     .addItem("Ignore beyond a certain heading", "promptForIgnoredHeading")
     .addItem("Manually adjust word count", "promptForManualAdjustment")
@@ -27,6 +22,8 @@ function onOpen(e) {
     .addItem("Set story document", "promptForStoryId")
     .addItem("Set report card spreadsheet", "promptForReportCardId")
     .addItem("Set log email address", "promptForEmailAddress")
+    .addItem("Set NaNoWriMo username", "promptForNanowrimoUsername")
+    .addItem("Set NaNoWriMo API secret key", "promptForNanowrimoSecretKey")
     .addToUi();
 
   installCheckGoalTrigger();
@@ -70,6 +67,9 @@ function doPost(e) {
     var neededWordCount = minWordCount - newWordCount;
     log("Write " + neededWordCount + " more words today.");
   }
+
+  var nanoResponse = updateNanowrimoWordCount(newWordCount);
+  log(nanoResponse);
 
   email(g_nanowrimoLog);
   return ContentService.createTextOutput(g_nanowrimoLog);

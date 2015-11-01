@@ -10,12 +10,12 @@ function updateWordCountDisplay(wordCount) {
   var body = getDocument().getBody();
   var range = body.findText("\\[[0-9,]+ WORDS, LAST UPDATED .+?\\]");
   var text = range.getElement().asText();
-  log(text.getText());
 
   var now = new Date();
   var timezone = -(now.getTimezoneOffset() / 60);
   var timezoneStr = "GMT" + (timezone < 0 ? "" : "+") + timezone;
   var nowStr = Utilities.formatDate(now, timezoneStr, "E yyyy-MM-dd h:mm a");
+
   if (!wordCount) wordCount = getAdjustedWordCount();
   wordCount = formatWithCommas(wordCount);
 
@@ -62,6 +62,14 @@ function promptForEmailAddress() {
   _promptForProperty("Email address to send logs:", setEmailAddress);
 }
 
+function promptForNanowrimoUsername() {
+  _promptForProperty("NaNoWriMo username:", setNanowrimoUsername);
+}
+
+function promptForNanowrimoSecretKey() {
+  _promptForProperty("NaNoWriMo secret key — see http://nanowrimo.org/api/wordcount", setNanowrimoSecretKey);
+}
+
 function displayAdjustedWordCount() {
   var wordCounts = getWordCounts();
   var toc = wordCounts["toc"];
@@ -103,6 +111,10 @@ function displayUpdatedReportCard() {
   }
 
   updateWordCountDisplay(wordCounts["new"]);
+
+  var nanoResponse = updateNanowrimoWordCount(wordCounts["new"]);
+  msg += nanoResponse;
+
   DocumentApp.getUi().alert(msg);
 }
 
