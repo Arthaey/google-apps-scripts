@@ -121,8 +121,6 @@ function insertHtml(html, insertPoint) {
 function getInsertPoint() {
   var body = getDocument().getBody();
   var insertPointText = getInsertPointText();
-  if (!insertPointText) insertPointText = "CONTINUE HERE";
-
   var searchResult = body.findText(insertPointText);
   if (!searchResult) return null;
   var elem = searchResult.getElement();
@@ -158,6 +156,11 @@ function findParentParagraph(elem) {
   return elem;
 }
 
+function getActiveDocumentId() {
+  var doc = DocumentApp.getActiveDocument();
+  return doc ? doc.getId() : null;
+}
+
 function getDocument() {
   var storyId = getStoryId();
   if (!storyId) storyId = promptForStoryId();
@@ -168,6 +171,16 @@ function getSpreadsheet() {
   var reportCardId = getReportCardId();
   if (!reportCardId) reportCardId = promptForReportCardId();
   return SpreadsheetApp.openById(reportCardId);
+}
+
+function getActiveUserEmail() {
+  return Session.getActiveUser().getEmail();
+}
+
+function getActiveUserName() {
+  var email = getActiveUserEmail();
+  var matches = email.match(/([^@]+)@/);
+  return matches[1];
 }
 
 function log(msg) {

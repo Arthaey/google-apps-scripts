@@ -1,29 +1,35 @@
-function _getProperty(key) {
+function _get(key, defaultValue) {
   var properties = PropertiesService.getScriptProperties();
-  return properties.getProperty(key);
+  var value = properties.getProperty(key);
+  if (!value && defaultValue) {
+    value = _set(key, defaultValue);
+  }
+  return value;
 }
 
-function _setProperty(key, value) {
+function _set(key, value) {
   var properties = PropertiesService.getScriptProperties();
   properties.setProperty(key, value);
   return value;
 }
 
-function getManualAdjustment()    { return _getProperty("MANUAL_ADJUSTMENT"); }
-function setManualAdjustment(val) { return _setProperty("MANUAL_ADJUSTMENT", val); }
+function getManualAdjustment(d)   { return _get("MANUAL_ADJUSTMENT", d || 0); }
+function setManualAdjustment(val) { return _set("MANUAL_ADJUSTMENT", val); }
 
-function getIgnoredHeading()      { return _getProperty("IGNORED_HEADING"); }
-function setIgnoredHeading(val)   { return _setProperty("IGNORED_HEADING", val); }
+function getIgnoredHeading(d)     { return _get("IGNORED_HEADING", d || "IGNORE PAST HERE"); }
+function setIgnoredHeading(val)   { return _set("IGNORED_HEADING", val); }
 
-function getInsertPointText()     { return _getProperty("INSERT_POINT_TEXT"); }
-function setInsertPointText(val)  { return _setProperty("INSERT_POINT_TEXT", val); }
+function getInsertPointText(d)    { return _get("INSERT_POINT_TEXT", d || "CONTINUE HERE"); }
+function setInsertPointText(val)  { return _set("INSERT_POINT_TEXT", val); }
 
-function getStoryId()             { return _getProperty("STORY_ID"); }
-function setStoryId(val)          { return _setProperty("STORY_ID", val); }
+function getStoryId(d)            { return _get("STORY_ID", d || getActiveDocumentId()); }
+function setStoryId(val)          { return _set("STORY_ID", val); }
 
-function getReportCardId()        { return _getProperty("REPORT_CARD_ID"); }
-function setReportCardId(id)      { return _setProperty("REPORT_CARD_ID", val); }
+function getReportCardId(d)       { return _get("REPORT_CARD_ID", d); }
+function setReportCardId(id)      { return _set("REPORT_CARD_ID", val); }
 
-function getEmailAddress()        { return _getProperty("EMAIL_ADDRESS"); }
-function setEmailAddress(val)     { return _setProperty("EMAIL_ADDRESS", val); }
+function getEmailAddress(d)       { return _get("EMAIL_ADDRESS", d || getActiveUserEmail()); }
+function setEmailAddress(val)     { return _set("EMAIL_ADDRESS", val); }
+
+
 
