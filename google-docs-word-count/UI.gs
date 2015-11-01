@@ -78,7 +78,7 @@ function displayAdjustedWordCount() {
     formatWithCommas(wordCounts["adjusted"]) + ": adjusted word count"
     ;
 
-  updateWordCountDisplay();
+  updateWordCountDisplay(wordCounts["adjusted"]);
   DocumentApp.getUi().alert(msg);
 }
 
@@ -102,7 +102,7 @@ function displayUpdatedReportCard() {
         formatWithCommas(diff) + ": write at least this much more today!\n";
   }
 
-  updateWordCountDisplay();
+  updateWordCountDisplay(wordCounts["new"]);
   DocumentApp.getUi().alert(msg);
 }
 

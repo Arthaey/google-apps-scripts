@@ -26,7 +26,7 @@ function runCheckGoalForToday() {
     alertMetGoalForToday(goal, actual);
     ScriptApp.deleteTrigger(g_checkGoalTrigger);
   }
-  updateWordCountDisplay();
+  updateWordCountDisplay(actual);
 }
 
 // Because there is no "onClose" event, delete this trigger
