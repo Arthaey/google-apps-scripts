@@ -61,9 +61,6 @@ function updateNanowrimoWordCount(wordCount) {
     "payload" : payload
   };
 
-  log(url);
-  log(options);
-
   // Expected: {"novel"=>"Novel Title", "old_wordcount"=>"123", "wordcount"=>"9876"}
   var response = UrlFetchApp.fetch(url, options);
   log(response);

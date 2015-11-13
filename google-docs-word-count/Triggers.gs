@@ -32,8 +32,7 @@ function runCheckGoalForToday() {
 function runUpdateTrigger() {
   var wordCounts = updateReportCard();
   var wordCount = wordCounts["new"];
-  var nanoResponse = updateNanowrimoWordCount(wordCount);
-  log(nanoResponse);
+  updateNanowrimoWordCount(wordCount);
   updateWordCountDisplay(wordCount);
 }
 

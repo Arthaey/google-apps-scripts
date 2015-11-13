@@ -68,8 +68,7 @@ function doPost(e) {
     log("Write " + neededWordCount + " more words today.");
   }
 
-  var nanoResponse = updateNanowrimoWordCount(newWordCount);
-  log(nanoResponse);
+  updateNanowrimoWordCount(newWordCount);
 
   email(g_nanowrimoLog);
   return ContentService.createTextOutput(g_nanowrimoLog);
