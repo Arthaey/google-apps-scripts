@@ -180,7 +180,10 @@ function getActiveUserEmail() {
 function getActiveUserName() {
   var email = getActiveUserEmail();
   var matches = email.match(/([^@]+)@/);
-  return matches[1];
+  if (matches && matches[1]) {
+    return matches[1];
+  }
+  return null;
 }
 
 function log(msg) {
