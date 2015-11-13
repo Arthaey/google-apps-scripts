@@ -139,8 +139,9 @@ function getIndentSize() {
 
   while (result = body.findElement(DocumentApp.ElementType.PARAGRAPH, result)) {
    var para = result.getElement().asParagraph();
-   if (para.getIndentFirstLine() > 0) {
-     log(para.getIndentFirstLine());
+   var isToc = (para.getParent().getType() == DocumentApp.ElementType.TABLE_OF_CONTENTS);
+   if (!isToc && para.getIndentFirstLine() > 0) {
+     log("Indent of first paragraph: " + para.getIndentFirstLine());
      return para.getIndentFirstLine();
    }
  }
