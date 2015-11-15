@@ -113,6 +113,9 @@ function insertHtml(html, insertPoint) {
     para.setAttributes(styles);
     insertPointIndex++; // keep inserting AFTER the latest paragraph
   }
+
+  // extra, blank paragraph as a separator
+  body.insertParagraph(insertPointIndex, "");
 }
 
 /*******************************************************************************/
