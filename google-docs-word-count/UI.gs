@@ -8,8 +8,6 @@ function formatWithCommas(num) {
 
 function updateWordCountDisplay(wordCount) {
   var body = getDocument().getBody();
-  var range = body.findText("\\[[0-9,]+ WORDS, LAST UPDATED .+?\\]");
-  var text = range.getElement().asText();
 
   var now = new Date();
   var timezone = -(now.getTimezoneOffset() / 60);
@@ -19,8 +17,17 @@ function updateWordCountDisplay(wordCount) {
   if (!wordCount) wordCount = getAdjustedWordCount();
   wordCount = formatWithCommas(wordCount);
 
-  text.setText("[" + wordCount + " WORDS, LAST UPDATED " + nowStr + "]");
-  text.setForegroundColor("#b7b7b7"); // dark gray 1
+  var wordCountText = "[" + wordCount + " WORDS, LAST UPDATED " + nowStr + "]";
+
+  var wordCountParagraph;
+  var range = body.findText("\\[[0-9,]+ WORDS, LAST UPDATED .+?\\]");
+  if (range) {
+    wordCountParagraph = range.getElement().asText();
+    wordCountParagraph.setText(wordCountText);
+  } else {
+    wordCountParagraph = body.insertParagraph(0, wordCountText);
+  }
+  wordCountParagraph.setForegroundColor("#b7b7b7"); // dark gray 1
 }
 
 function alertMetGoalForToday(goal, actual) {
