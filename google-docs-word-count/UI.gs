@@ -79,15 +79,14 @@ function promptForNanowrimoSecretKey() {
 
 function displayAdjustedWordCount() {
   var wordCounts = getWordCounts();
-  var toc = wordCounts["toc"];
   var ignoredHeading = getIgnoredHeading();
 
   var msg = 
     formatWithCommas(wordCounts["raw"]) + ": raw word count\n" +
     "- " + formatWithCommas(wordCounts["title"]) + ": title word count\n" +
-    "- " + formatWithCommas(toc * 2) + ": table of contents word count " +
-    "(" + formatWithCommas(toc) + "x2)\n" +
-    "- " + formatWithCommas(wordCounts["ignored"]) + ": ignored words\n" +
+    "- " + formatWithCommas(wordCounts["toc"]) + ": table of contents word count\n" +
+    "- " + formatWithCommas(wordCounts["headings"]) + ": headings word count\n" +
+    "- " + formatWithCommas(wordCounts["ignored"]) + ": ignored words ('" + ignoredHeading + "')\n" +
     "- " + formatWithCommas(wordCounts["manual"]) + ": manual adjustment\n" +
     "====================\n" +
     formatWithCommas(wordCounts["adjusted"]) + ": adjusted word count"

@@ -10,6 +10,7 @@ function getWordCounts() {
   wordCounts["raw"] = getWordCount(body.getText());
   wordCounts["title"] = getTitleWordCount(body);
   wordCounts["toc"] = getTableOfContentsWordCount(body);
+  wordCounts["headings"] = getHeadingsWordCount(body);
   wordCounts["insert"] = 0;
   wordCounts["ignored"] = getIgnoredWordCount(body);
   wordCounts["manual"] = Math.ceil(getManualAdjustment());
@@ -24,7 +25,7 @@ function getWordCounts() {
   // because the headers must show up somewhere in the text itself too.  
   wordCounts["adjusted"] = wordCounts["raw"]
     - wordCounts["title"]
-    - wordCounts["toc"] * 2
+    - wordCounts["headings"]
     - wordCounts["insert"]
     - wordCounts["ignored"]
     - wordCounts["manual"]
@@ -52,6 +53,20 @@ function getTableOfContentsWordCount(body) {
   return getWordCount(toc.getText());
 }
 
+function getHeadingsWordCount(body) {
+  var wordCount = 0;
+  var searchResult = null;
+
+  while (searchResult = body.findElement(DocumentApp.ElementType.PARAGRAPH, searchResult)) {
+    var elem = searchResult.getElement().asParagraph();
+    if (elem.getHeading() != DocumentApp.ParagraphHeading.NORMAL) {
+      wordCount += getWordCount(elem.getText());
+    }
+  }
+
+  return wordCount;
+}
+
 function getIgnoredWordCount(body) {
   var wordCount = 0;
   var ignoredHeading = getIgnoredHeading();
@@ -60,7 +75,7 @@ function getIgnoredWordCount(body) {
 
   wordCount += getBracketedWordCount(text);
 
-  // If no "IGNORE PAST HERE" type heading defined, then we're done.
+  // If no "IGNORE PAST HERE" type heading defined in user properties, then we're done.
   if (!ignoredHeading) return wordCount;
   
   var firstElement = null;
@@ -77,7 +92,7 @@ function getIgnoredWordCount(body) {
       heading = par;
     }
   }
-  // If no "IGNORE PAST HERE" type heading found, then we're done.
+  // If no "IGNORE PAST HERE" type heading found in the doc, then we're done.
   if (!heading) return wordCount;
   
   wordCount += getWordCount(heading.getText());
@@ -85,7 +100,7 @@ function getIgnoredWordCount(body) {
   var elem = heading;
   
   do {
-    // Don't count headings, which are already included in the TOC word count.
+    // Don't count headings, which are already included in the headings word count.
     elem = elem.getNextSibling();
     var elemText = elem.getText();
     if (elem.getHeading() == DocumentApp.ParagraphHeading.NORMAL) {
