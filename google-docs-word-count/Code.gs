@@ -1,4 +1,4 @@
-var g_nanowrimoLog = ""; // For debug logging across methods.
+var g_log = ""; // For debug logging across methods.
 
 var g_checkGoalTrigger;
 var g_updateTrigger;
@@ -39,7 +39,7 @@ function doPost(e) {
   var snippet = e.parameter["snippet"];
   if (!snippet) {
     log("No snippet found to add. Total is still " + oldWordCount + " words");
-    return ContentService.createTextOutput(g_nanowrimoLog);
+    return ContentService.createTextOutput(g_log);
   }
     
   var snippetWordCount = getWordCount(snippet);
@@ -70,8 +70,8 @@ function doPost(e) {
 
   updateNanowrimoWordCount(newWordCount);
 
-  email(g_nanowrimoLog);
-  return ContentService.createTextOutput(g_nanowrimoLog);
+  email(g_log);
+  return ContentService.createTextOutput(g_log);
 }
 
 /*******************************************************************************/
@@ -191,12 +191,12 @@ function getActiveUserName() {
 
 function log(msg) {
   Logger.log(msg);
-  g_nanowrimoLog += msg + "\n";
+  g_log += msg + "\n";
 }
 
 function email(msg) {
   var email = getEmailAddress();
   if (!email) email = promptForEmailAddress();
-  GmailApp.sendEmail(email, "NaNoWriMo doPost log", msg);
+  GmailApp.sendEmail(email, "LiveScribe doPost log", msg);
 }
 
