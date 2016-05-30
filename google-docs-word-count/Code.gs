@@ -61,13 +61,15 @@ function doPost(e) {
   }
     
   var snippetWordCount = getWordCount(snippet);
-  
+  var newWordCount = oldWordCount + snippetWordCount;
+
   var body = getDocument().getBody();  
   var insertPoint = getInsertPoint();
-  
+
   var isHtml = (e.parameters["is_html"] == 1);
   log((isHtml ? "HTML" : "Plain text") + " snippet received.");
   log("Snippet is " + snippetWordCount + " words.");
+  log("New word count is " + newWordCount + " words.");
 
   if (e.parameters["is_html"] == 1) {
     insertHtml(snippet, insertPoint);
@@ -75,22 +77,25 @@ function doPost(e) {
     insertHtml("<p>" + text.trim() + "</p>");
   }
   
-  var reportCardWordCounts = updateReportCard(newWordCount);
-  var newWordCount = reportCardWordCounts["new"];
-  var minWordCount = reportCardWordCounts["min"];
-  
-  log("Total word count is now " + newWordCount + " words.");
+  if (getEnableReportCard(false)) {
+    var reportCardWordCounts = updateReportCard(newWordCount);
+    var minWordCount = reportCardWordCounts["min"];
+    newWordCount = reportCardWordCounts["new"];
+    
+    log("Total word count is now " + newWordCount + " words.");
 
-  if (newWordCount < minWordCount) {
-    var neededWordCount = minWordCount - newWordCount;
-    log("Write " + neededWordCount + " more words today.");
-  }
+    if (newWordCount < minWordCount) {
+      var neededWordCount = minWordCount - newWordCount;
+      log("Write " + neededWordCount + " more words today.");
+    }
 
-  if (getEnableNanowrimo(false)) {
-    updateNanowrimoWordCount(newWordCount);
+    if (getEnableNanowrimo(false)) {
+      updateNanowrimoWordCount(newWordCount);
+    }
   }
 
   email(g_log);
+  updateWordCountDisplay(newWordCount);
   return ContentService.createTextOutput(g_log);
 }
 
