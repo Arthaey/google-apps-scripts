@@ -12,22 +12,40 @@ function onInstall(e) {
 }
 
 function onOpen(e) {
-  DocumentApp.getUi().createAddonMenu()
-    .addItem("Show adjusted word count", "displayAdjustedWordCount")
-    .addItem("Update Record Card spreadsheet", "displayUpdatedReportCard")
-    .addSeparator()
-    .addItem("Ignore beyond a certain heading", "promptForIgnoredHeading")
-    .addItem("Manually adjust word count", "promptForManualAdjustment")
-    .addSeparator()
-    .addItem("Set story document", "promptForStoryId")
-    .addItem("Set report card spreadsheet", "promptForReportCardId")
-    .addItem("Set log email address", "promptForEmailAddress")
-    .addItem("Set NaNoWriMo username", "promptForNanowrimoUsername")
-    .addItem("Set NaNoWriMo API secret key", "promptForNanowrimoSecretKey")
-    .addToUi();
+  var nanowrimoEnabled = getEnableNanowrimo(false);
+  var reportCardEnabled = getEnablereportCard(false);
 
-  installCheckGoalTrigger();
-  installUpdateTrigger();
+  var menu = DocumentApp.getUi().createAddonMenu();
+
+  menu.addItem("Show adjusted word count", "displayAdjustedWordCount");
+  if (nanowrimoEnabled) {
+    menu.addItem("Update Record Card spreadsheet", "displayUpdatedReportCard");
+  }
+  menu.addSeparator();
+
+  menu.addItem("Ignore beyond a certain heading", "promptForIgnoredHeading");
+  menu.addItem("Manually adjust word count", "promptForManualAdjustment");
+  menu.addSeparator();
+
+  menu.addItem("Set story document", "promptForStoryId");
+  if (reportCardEnabled) {
+    menu.addItem("Set report card spreadsheet", "promptForReportCardId");
+  }
+  menu.addItem("Set log email address", "promptForEmailAddress");
+  if (nanowrimoEnabled) {
+    menu.addItem("Set NaNoWriMo username", "promptForNanowrimoUsername");
+    menu.addItem("Set NaNoWriMo API secret key", "promptForNanowrimoSecretKey");
+  }
+  menu.addSeparator();
+
+  // TODO: add conditional UI for toggling NaNoWriMo & Report Card features.
+
+  menu.addToUi();
+
+  if (nanowrimoEnabled || reportCardEnabled) {
+    installCheckGoalTrigger();
+    installUpdateTrigger();
+  }
 }
 
 function doPost(e) {
@@ -68,7 +86,9 @@ function doPost(e) {
     log("Write " + neededWordCount + " more words today.");
   }
 
-  updateNanowrimoWordCount(newWordCount);
+  if (getEnableNanowrimo(false)) {
+    updateNanowrimoWordCount(newWordCount);
+  }
 
   email(g_log);
   return ContentService.createTextOutput(g_log);

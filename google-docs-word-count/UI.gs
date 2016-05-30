@@ -119,8 +119,10 @@ function displayUpdatedReportCard() {
 
   updateWordCountDisplay(wordCounts["new"]);
 
-  var nanoResponse = updateNanowrimoWordCount(wordCounts["new"]);
-  msg += nanoResponse;
+  if (getEnableNanowrimo(false)) {
+    var nanoResponse = updateNanowrimoWordCount(wordCounts["new"]);
+    msg += nanoResponse;
+  }
 
   DocumentApp.getUi().alert(msg);
 }

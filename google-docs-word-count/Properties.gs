@@ -37,3 +37,8 @@ function setNanowrimoUsername(v)  { return _set("NANOWRIMO_USERNAME", v); }
 function getNanowrimoSecretKey(d) { return _get("NANOWRIMO_SECRET_KEY", d); }
 function setNanowrimoSecretKey(v) { return _set("NANOWRIMO_SECRET_KEY", v); }
 
+function getEnableNanowrimo(d)    { return _get("ENABLE_NANOWRIMO", d); }
+function setEnableNanowrimo(v)    { return _set("ENABLE_NANOWRIMO", v); }
+
+function getEnableReportCard(d)   { return _get("ENABLE_REPORT_CARD", d); }
+function setEnableReportCard(v)   { return _set("ENABLE_REPORT_CARD", v); }

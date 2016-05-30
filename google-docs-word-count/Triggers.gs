@@ -30,9 +30,17 @@ function runCheckGoalForToday() {
 }
 
 function runUpdateTrigger() {
-  var wordCounts = updateReportCard();
+  if (getEnablereportCard(false)) {
+    var wordCounts = updateReportCard();
+  }
+
+  // TODO: separate report card from getting new word counts
   var wordCount = wordCounts["new"];
-  updateNanowrimoWordCount(wordCount);
+
+  if (getEnableNanowrimo(false)) {
+    updateNanowrimoWordCount(wordCount);
+  }
+
   updateWordCountDisplay(wordCount);
 }
 
