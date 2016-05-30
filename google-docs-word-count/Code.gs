@@ -13,7 +13,7 @@ function onInstall(e) {
 
 function onOpen(e) {
   var nanowrimoEnabled = getEnableNanowrimo(false);
-  var reportCardEnabled = getEnablereportCard(false);
+  var reportCardEnabled = getEnableReportCard(false);
 
   var menu = DocumentApp.getUi().createAddonMenu();
 
